@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.lightbox.service.PeliculaService;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/pelicula")
 public class PeliculaController {
@@ -16,12 +14,43 @@ public class PeliculaController {
     private PeliculaService peliculaService;
 
     @GetMapping
-    public ResponseEntity<Map<String,Object>> obtenerTodasPeliculas() {
-        return peliculaService.obtenerTodasPeliculas();
+    public ResponseEntity<?> obtenerTodasPeliculas() {
+        return peliculaService.obtenerTodasPeliculas().isEmpty()
+                ? ResponseEntity.notFound().build()
+                : ResponseEntity.ok(peliculaService.obtenerTodasPeliculas());
     }
 
     @GetMapping("/genero")
-    public ResponseEntity<Map<String,Object>> obtenerPorIdGenero(@RequestParam("id") int id) {
-        return peliculaService.obtenerPorIdGenero(id);
+    public ResponseEntity<?> obtenerPorIdGenero(@RequestParam("id") int id) {
+        return peliculaService.obtenerPorIdGenero(id).isEmpty() ?
+                ResponseEntity.notFound().build() :
+                ResponseEntity.ok(peliculaService.obtenerPorIdGenero(id));
+
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> findByTitulo(@PathParam("titulo") String titulo) {
+        return peliculaService.findByTitulo(titulo)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/filtrar")
+    public ResponseEntity<?> findByCineAndFechaFinCartelera(
+            @RequestParam("idCine") int idCine,
+            @RequestParam("fechaFin") String fechaFinCartelera) {
+        if (fechaFinCartelera == null || fechaFinCartelera.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        return peliculaService.findByCineAndFechaFinCartelera(idCine, fechaFinCartelera).isEmpty() ?
+                ResponseEntity.notFound().build() :
+                ResponseEntity.ok(peliculaService.findByCineAndFechaFinCartelera(idCine, fechaFinCartelera));
+    }
+
+    @GetMapping("/cartelera")
+    public ResponseEntity<?> findByfechaInicioCarteleraAndFechaFinCartelera() {
+        return peliculaService.findByfechaInicioCarteleraAndFechaFinCartelera().isEmpty() ?
+                ResponseEntity.notFound().build() :
+                ResponseEntity.ok(peliculaService.findByfechaInicioCarteleraAndFechaFinCartelera());
     }
 }

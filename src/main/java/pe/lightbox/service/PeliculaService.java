@@ -1,11 +1,13 @@
 package pe.lightbox.service;
 
-import org.springframework.http.ResponseEntity;
-
-import java.util.Map;
+import pe.lightbox.model.Pelicula;
+import java.util.List;
+import java.util.Optional;
 
 public interface PeliculaService {
-
-    public ResponseEntity<Map<String, Object>> obtenerTodasPeliculas();
-    public ResponseEntity<Map<String, Object>> obtenerPorIdGenero(int id);
+    List<Pelicula> obtenerTodasPeliculas();
+    List<Pelicula> obtenerPorIdGenero(int id);
+    Optional<Pelicula> findByTitulo(String titulo);
+    List<Pelicula> findByCineAndFechaFinCartelera(int idCine, String fechaFinCartelera);
+    List<Pelicula> findByfechaInicioCarteleraAndFechaFinCartelera();
 }

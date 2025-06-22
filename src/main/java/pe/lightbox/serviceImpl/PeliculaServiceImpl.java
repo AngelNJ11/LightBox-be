@@ -1,16 +1,13 @@
 package pe.lightbox.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pe.lightbox.model.Pelicula;
 import pe.lightbox.repository.PeliculaRepository;
 import pe.lightbox.service.PeliculaService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class PeliculaServiceImpl implements PeliculaService {
@@ -19,38 +16,53 @@ public class PeliculaServiceImpl implements PeliculaService {
     private PeliculaRepository peliculaRepository;
 
     @Override
-    public ResponseEntity<Map<String, Object>> obtenerTodasPeliculas() {
-        Map<String, Object> response = new HashMap<>();
-        List<Pelicula> peliculas = peliculaRepository.findAll();
-
-        if( peliculas.isEmpty() ) {
-            response.put("mensaje", "No existen registros para esta consulta");
-            response.put("status", HttpStatus.NOT_FOUND);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } else {
-            response.put("mensaje", "Peliculas obtenidas correctamente\"");
-            response.put("status", HttpStatus.OK);
-            response.put("peliculas", peliculas);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
-
+    public List<Pelicula> obtenerTodasPeliculas() {
+        return peliculaRepository.findAll();
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> obtenerPorIdGenero(int id) {
-        Map<String, Object> response = new HashMap<>();
-        List<Pelicula> peliculas = peliculaRepository.findByGenero(id);
-
-        if (peliculas.isEmpty()) {
-            response.put("mensaje", "No se encontraron películas con el género ID: " + id);
-            response.put("status", 404);
-            return ResponseEntity.status(404).body(response);
-        } else {
-            response.put("mensaje", "Películas por género encontradas");
-            response.put("genero", peliculas);
-            response.put("status", 200);
-            return ResponseEntity.ok(response);
+    public List<Pelicula> obtenerPorIdGenero(int id) {
+        try {
+            List<Pelicula> peliculasPorGenero = peliculaRepository.findByIdGenero(id);
+            return peliculasPorGenero;
+        } catch (Exception e) {
+            System.out.println("Error al buscar películas por ID de género: " + e.getMessage());
+            return Collections.emptyList();
         }
     }
 
+
+    @Override
+    public Optional<Pelicula> findByTitulo(String titulo) {
+        try {
+            return peliculaRepository.findByTitulo(titulo);
+        } catch (Exception e) {
+            System.out.println("Error al buscar película por título: " + e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<Pelicula> findByCineAndFechaFinCartelera(int idCine, String fechaFinCartelera) {
+        try{
+            return peliculaRepository.findByCineAndFechaFinCartelera(idCine, fechaFinCartelera);
+        } catch (Exception e) {
+            System.out.println("Error al buscar películas por cine y fecha de fin de cartelera: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public List<Pelicula> findByfechaInicioCarteleraAndFechaFinCartelera() {
+        try {
+            LocalDate fechaInicioCartelera = LocalDate.now().minusDays(30); // 30 días atras
+            LocalDate fechaFinCartelera = LocalDate.now();
+//            LocalDate fechaInicioCartelera = LocalDate.of(2024, 10, 1);
+//            LocalDate fechaFinCartelera = LocalDate.of(2024, 11, 1);
+            return peliculaRepository.findByfechaInicioCarteleraAndFechaFinCartelera(fechaInicioCartelera, fechaFinCartelera);
+        } catch (Exception e) {
+            System.out.println("Error al buscar películas por fechas de cartelera: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
 }
