@@ -3,7 +3,7 @@ package pe.lightbox.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -33,10 +33,10 @@ public class Pelicula {
     private int duracion;
 
     @Column(name = "fec_inicio_cartelera")
-    private Date fechaInicioCartelera;
+    private LocalDate fechaInicioCartelera;
 
     @Column(name = "fec_fin_cartelera")
-    private Date fechaFinCartelera;
+    private LocalDate fechaFinCartelera;
 
     @Column(name = "ruta_imagen")
     private String rutaImagen;
