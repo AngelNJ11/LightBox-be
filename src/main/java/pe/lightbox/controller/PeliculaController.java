@@ -13,11 +13,19 @@ public class PeliculaController {
     @Autowired
     private PeliculaService peliculaService;
 
+
     @GetMapping
     public ResponseEntity<?> obtenerTodasPeliculas() {
         return peliculaService.obtenerTodasPeliculas().isEmpty()
                 ? ResponseEntity.notFound().build()
                 : ResponseEntity.ok(peliculaService.obtenerTodasPeliculas());
+    }
+
+    @GetMapping("/detalle")
+    public ResponseEntity<?> obtenerPeliculaId(@RequestParam("id") int id) {
+        return peliculaService.obtenerPeliculaId(id).isEmpty() ?
+                ResponseEntity.notFound().build() :
+                ResponseEntity.ok(peliculaService.obtenerPeliculaId(id));
     }
 
     @GetMapping("/genero")

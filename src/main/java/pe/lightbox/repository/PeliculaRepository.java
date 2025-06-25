@@ -14,6 +14,11 @@ import java.util.Optional;
 public interface PeliculaRepository extends JpaRepository<Pelicula, Integer> {
     @Query("SELECT p FROM Pelicula p WHERE p.genero.id = :idGenero")
     List<Pelicula> findByIdGenero( @Param("idGenero") int genero);
+
+    @Query("SELECT p FROM Pelicula p WHERE p.idPelicula = :idPelicula")
+    Optional<Pelicula> findByIdPelicula(int idPelicula);
+
+
     Optional<Pelicula> findByTitulo(String titulo);
 
     @Query(

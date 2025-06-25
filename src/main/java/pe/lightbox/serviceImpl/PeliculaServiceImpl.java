@@ -16,6 +16,11 @@ public class PeliculaServiceImpl implements PeliculaService {
     private PeliculaRepository peliculaRepository;
 
     @Override
+    public Optional<Pelicula> obtenerPeliculaId(int id) {
+        return peliculaRepository.findByIdPelicula(id);
+    }
+
+    @Override
     public List<Pelicula> obtenerTodasPeliculas() {
         return peliculaRepository.findAll();
     }
