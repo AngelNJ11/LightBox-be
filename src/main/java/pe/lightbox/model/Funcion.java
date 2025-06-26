@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "tb_funcion")
+@Table(name = "tb_funciones")
 public class Funcion {
 
     @Id
@@ -22,7 +23,12 @@ public class Funcion {
     @JoinColumn(name = "id_pelicula", referencedColumnName = "id_pelicula")
     private Pelicula pelicula;
 
-    private double Precio;
-    private LocalDate InicioFuncion;
-    private LocalDate FinFuncion;
+    @Column(name = "precio")
+    private double precio;
+
+    @Column(name = "inicio_funcion")
+    private LocalDateTime inicioFuncion;
+
+    @Column(name = "fin_funcion")
+    private LocalDateTime finFuncion;
 }

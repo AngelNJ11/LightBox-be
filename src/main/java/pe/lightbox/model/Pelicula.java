@@ -40,4 +40,7 @@ public class Pelicula {
 
     @Column(name = "ruta_imagen")
     private String rutaImagen;
+
+
+
 }
