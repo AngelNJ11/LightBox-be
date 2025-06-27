@@ -35,8 +35,8 @@ public class TicketPurchaseServiceImpl implements TicketPurchaseService{
                 f.setIdFuncion(rs.getInt("id_funcion"));
                 f.setSala(s);
                 f.setPelicula(p);
-                f.setInicioFuncion(rs.getTimestamp("inicio_funcion").toLocalDateTime());
-                f.setFinFuncion(rs.getTimestamp("fin_funcion").toLocalDateTime());
+                f.setInicioFuncion(rs.getTimestamp("inicio_funcion").toLocalDateTime().toLocalDate());
+                f.setFinFuncion(rs.getTimestamp("fin_funcion").toLocalDateTime().toLocalDate());
                 return f;
             });
     }

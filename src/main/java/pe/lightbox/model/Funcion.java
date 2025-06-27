@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -27,8 +26,8 @@ public class Funcion {
     private double precio;
 
     @Column(name = "inicio_funcion")
-    private LocalDateTime inicioFuncion;
+    private LocalDate inicioFuncion;
 
     @Column(name = "fin_funcion")
-    private LocalDateTime finFuncion;
+    private LocalDate finFuncion;
 }
