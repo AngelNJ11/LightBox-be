@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class AsientoPurchase {
 
-    public int IdAsiento;
-    public int IdSala;
-    public boolean Disponibilidad;
+    public int idAsiento;
+    public int idSala;
+    public boolean disponibilidad;
 }
