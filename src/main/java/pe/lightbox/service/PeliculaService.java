@@ -11,4 +11,5 @@ public interface PeliculaService {
     Optional<Pelicula> findByTitulo(String titulo);
     List<Pelicula> findByCineAndFechaFinCartelera(int idCine, String fechaFinCartelera);
     List<Pelicula> findByfechaInicioCarteleraAndFechaFinCartelera();
+    List<Pelicula> findByFechaInicioCarteleraAfter();
 }

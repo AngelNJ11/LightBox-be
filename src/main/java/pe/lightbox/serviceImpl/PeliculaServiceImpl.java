@@ -70,4 +70,10 @@ public class PeliculaServiceImpl implements PeliculaService {
             return Collections.emptyList();
         }
     }
+
+    @Override
+    public List<Pelicula> findByFechaInicioCarteleraAfter() {
+       List<Pelicula> estrenos = peliculaRepository.findByFechaInicioCarteleraAfter(LocalDate.now());
+       return estrenos;
+    }
 }

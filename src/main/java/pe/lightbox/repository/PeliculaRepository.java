@@ -37,4 +37,7 @@ public interface PeliculaRepository extends JpaRepository<Pelicula, Integer> {
             LocalDate fechaInicioCartelera,
             LocalDate fechaFinCartelera
     );
+
+    List<Pelicula> findByFechaInicioCarteleraAfter(LocalDate hoy);
+
 }

@@ -1,9 +1,16 @@
 package pe.lightbox.controller;
 
 import jakarta.websocket.server.PathParam;
+
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import pe.lightbox.model.Pelicula;
 import pe.lightbox.service.PeliculaService;
 
 @RestController
@@ -12,7 +19,6 @@ public class PeliculaController {
 
     @Autowired
     private PeliculaService peliculaService;
-
 
     @GetMapping
     public ResponseEntity<?> obtenerTodasPeliculas() {
@@ -23,16 +29,14 @@ public class PeliculaController {
 
     @GetMapping("/detalle")
     public ResponseEntity<?> obtenerPeliculaId(@RequestParam("id") int id) {
-        return peliculaService.obtenerPeliculaId(id).isEmpty() ?
-                ResponseEntity.notFound().build() :
-                ResponseEntity.ok(peliculaService.obtenerPeliculaId(id));
+        return peliculaService.obtenerPeliculaId(id).isEmpty() ? ResponseEntity.notFound().build()
+                : ResponseEntity.ok(peliculaService.obtenerPeliculaId(id));
     }
 
     @GetMapping("/genero")
     public ResponseEntity<?> obtenerPorIdGenero(@RequestParam("id") int id) {
-        return peliculaService.obtenerPorIdGenero(id).isEmpty() ?
-                ResponseEntity.notFound().build() :
-                ResponseEntity.ok(peliculaService.obtenerPorIdGenero(id));
+        return peliculaService.obtenerPorIdGenero(id).isEmpty() ? ResponseEntity.notFound().build()
+                : ResponseEntity.ok(peliculaService.obtenerPorIdGenero(id));
 
     }
 
@@ -50,15 +54,28 @@ public class PeliculaController {
         if (fechaFinCartelera == null || fechaFinCartelera.isEmpty()) {
             throw new IllegalArgumentException();
         }
-        return peliculaService.findByCineAndFechaFinCartelera(idCine, fechaFinCartelera).isEmpty() ?
-                ResponseEntity.notFound().build() :
-                ResponseEntity.ok(peliculaService.findByCineAndFechaFinCartelera(idCine, fechaFinCartelera));
+        return peliculaService.findByCineAndFechaFinCartelera(idCine, fechaFinCartelera).isEmpty()
+                ? ResponseEntity.notFound().build()
+                : ResponseEntity.ok(peliculaService.findByCineAndFechaFinCartelera(idCine, fechaFinCartelera));
     }
 
     @GetMapping("/cartelera")
     public ResponseEntity<?> findByfechaInicioCarteleraAndFechaFinCartelera() {
-        return peliculaService.findByfechaInicioCarteleraAndFechaFinCartelera().isEmpty() ?
-                ResponseEntity.notFound().build() :
-                ResponseEntity.ok(peliculaService.findByfechaInicioCarteleraAndFechaFinCartelera());
+        List<Pelicula> cartelera = peliculaService.findByfechaInicioCarteleraAndFechaFinCartelera();
+
+        if (cartelera.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(cartelera);
+    }
+
+    @GetMapping("/estrenos")
+    public ResponseEntity<?> findByFechaInicioCarteleraAfter() {
+        List<Pelicula> estrenos = peliculaService.findByFechaInicioCarteleraAfter();
+
+        if (estrenos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(estrenos);
     }
 }
