@@ -33,10 +33,7 @@ public interface PeliculaRepository extends JpaRepository<Pelicula, Integer> {
             @Param("fechaFin") String fechaFinCartelera
     );
 
-    List<Pelicula> findByfechaInicioCarteleraAndFechaFinCartelera(
-            LocalDate fechaInicioCartelera,
-            LocalDate fechaFinCartelera
-    );
+    List<Pelicula> findByFechaInicioCarteleraLessThanEqualAndFechaFinCarteleraGreaterThanEqual(LocalDate inicio, LocalDate fin);
 
     List<Pelicula> findByFechaInicioCarteleraAfter(LocalDate hoy);
 

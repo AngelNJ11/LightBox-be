@@ -10,6 +10,6 @@ public interface PeliculaService {
     List<Pelicula> obtenerPorIdGenero(int id);
     Optional<Pelicula> findByTitulo(String titulo);
     List<Pelicula> findByCineAndFechaFinCartelera(int idCine, String fechaFinCartelera);
-    List<Pelicula> findByfechaInicioCarteleraAndFechaFinCartelera();
-    List<Pelicula> findByFechaInicioCarteleraAfter();
+    List<Pelicula> findPeliculasEnCartelera();
+    List<Pelicula> findEstrenos();
 }

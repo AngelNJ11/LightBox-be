@@ -58,13 +58,12 @@ public class PeliculaServiceImpl implements PeliculaService {
     }
 
     @Override
-    public List<Pelicula> findByfechaInicioCarteleraAndFechaFinCartelera() {
+    public List<Pelicula> findPeliculasEnCartelera() {
         try {
-            LocalDate fechaInicioCartelera = LocalDate.now().minusDays(30); // 30 días atras
-            LocalDate fechaFinCartelera = LocalDate.now();
+            LocalDate fechaActual = LocalDate.now();
 //            LocalDate fechaInicioCartelera = LocalDate.of(2024, 10, 1);
 //            LocalDate fechaFinCartelera = LocalDate.of(2024, 11, 1);
-            return peliculaRepository.findByfechaInicioCarteleraAndFechaFinCartelera(fechaInicioCartelera, fechaFinCartelera);
+            return peliculaRepository.findByFechaInicioCarteleraLessThanEqualAndFechaFinCarteleraGreaterThanEqual(fechaActual, fechaActual);
         } catch (Exception e) {
             System.out.println("Error al buscar películas por fechas de cartelera: " + e.getMessage());
             return Collections.emptyList();
@@ -72,7 +71,7 @@ public class PeliculaServiceImpl implements PeliculaService {
     }
 
     @Override
-    public List<Pelicula> findByFechaInicioCarteleraAfter() {
+    public List<Pelicula> findEstrenos() {
        List<Pelicula> estrenos = peliculaRepository.findByFechaInicioCarteleraAfter(LocalDate.now());
        return estrenos;
     }

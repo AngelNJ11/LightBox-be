@@ -2,11 +2,9 @@ package pe.lightbox.controller;
 
 import jakarta.websocket.server.PathParam;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,7 +59,7 @@ public class PeliculaController {
 
     @GetMapping("/cartelera")
     public ResponseEntity<?> findByfechaInicioCarteleraAndFechaFinCartelera() {
-        List<Pelicula> cartelera = peliculaService.findByfechaInicioCarteleraAndFechaFinCartelera();
+        List<Pelicula> cartelera = peliculaService.findPeliculasEnCartelera();
 
         if (cartelera.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -71,7 +69,7 @@ public class PeliculaController {
 
     @GetMapping("/estrenos")
     public ResponseEntity<?> findByFechaInicioCarteleraAfter() {
-        List<Pelicula> estrenos = peliculaService.findByFechaInicioCarteleraAfter();
+        List<Pelicula> estrenos = peliculaService.findEstrenos();
 
         if (estrenos.isEmpty()) {
             return ResponseEntity.noContent().build();
