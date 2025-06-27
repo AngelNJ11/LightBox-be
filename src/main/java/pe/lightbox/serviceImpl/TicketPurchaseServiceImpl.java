@@ -35,18 +35,34 @@ public class TicketPurchaseServiceImpl implements TicketPurchaseService {
             List<Funcion> funciones = new ArrayList<>();
             ResultSet rs = cs.executeQuery();
             while (rs.next()) {
+                Funcion f = new Funcion();
+                f.setIdFuncion(rs.getInt("id_funcion"));
+                f.setInicioFuncion(rs.getTimestamp("inicio_funcion").toLocalDateTime());
+                f.setFinFuncion(rs.getTimestamp("fin_funcion").toLocalDateTime());
+                f.setPrecio(rs.getDouble("precio"));
+
                 Sala s = new Sala();
                 s.setIdSala(rs.getInt("id_sala"));
+                s.setEnumeracion(rs.getString("enumeracion"));
+                s.setPiso(rs.getInt("piso_sala"));
+                s.setCapacidadSala(rs.getInt("capacidad_sala"));
+
+                Cine c = new Cine();
+                c.setIdCine(rs.getInt("id_cine"));
+                s.setCine(c);
+
+                f.setSala(s);
 
                 Pelicula p = new Pelicula();
                 p.setIdPelicula(rs.getInt("id_pelicula"));
+                p.setTitulo(rs.getString("titulo"));
+                p.setDescripcion(rs.getString("descripcion"));
+                p.setDuracion(rs.getInt("duracion"));
+                p.setFechaInicioCartelera(rs.getDate("fec_inicio_cartelera").toLocalDate());
+                p.setFechaFinCartelera(rs.getDate("fec_fin_cartelera").toLocalDate());
+                p.setRutaImagen(rs.getString("ruta_imagen"));
 
-                Funcion f = new Funcion();
-                f.setIdFuncion(rs.getInt("id_funcion"));
-                f.setSala(s);
                 f.setPelicula(p);
-                f.setInicioFuncion(rs.getTimestamp("inicio_funcion").toLocalDateTime());
-                f.setFinFuncion(rs.getTimestamp("fin_funcion").toLocalDateTime());
 
                 funciones.add(f);
             }
