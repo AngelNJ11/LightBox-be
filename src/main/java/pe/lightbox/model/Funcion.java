@@ -3,7 +3,7 @@ package pe.lightbox.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -26,8 +26,8 @@ public class Funcion {
     private double precio;
 
     @Column(name = "inicio_funcion")
-    private LocalDate inicioFuncion;
+    private LocalDateTime inicioFuncion;
 
     @Column(name = "fin_funcion")
-    private LocalDate finFuncion;
+    private LocalDateTime finFuncion;
 }
