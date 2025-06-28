@@ -2,12 +2,15 @@ package pe.lightbox.serviceImpl;
 
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
+import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -145,16 +148,35 @@ public class TicketPurchaseServiceImpl implements TicketPurchaseService {
                 .orElse("");
 
         try {
-            jdbcTemplate.update(connection -> {
-                CallableStatement cs = connection.prepareCall("{CALL usp_RegistrarCompra(?, ?, ?, ?, ?)}");
-                cs.setInt(1, idCliente);
-                cs.setInt(2, idFuncion);
-                cs.setInt(3, piso);
-                cs.setInt(4, idCine);
-                cs.setString(5, asientoString);
-                return cs;
+            return jdbcTemplate.execute((ConnectionCallback<String>) con -> {
+                try (CallableStatement cs = con.prepareCall("{CALL usp_RegistrarCompra(?, ?, ?, ?, ?)}")) {
+                    cs.setInt(1, idCliente);
+                    cs.setInt(2, idFuncion);
+                    cs.setInt(3, piso);
+                    cs.setInt(4, idCine);
+                    cs.setString(5, asientoString);
+
+                    boolean hasResult = cs.execute();
+                    StringBuilder mensaje = new StringBuilder();
+
+                    while (hasResult) {
+                        try (ResultSet rs = cs.getResultSet()) {
+                            ResultSetMetaData metaData = rs.getMetaData();
+                            int columnCount = metaData.getColumnCount();
+                            while (rs.next()) {
+                                for (int i = 1; i <= columnCount; i++) {
+                                    mensaje.append(metaData.getColumnLabel(i)).append(": ").append(rs.getString(i))
+                                            .append("\n");
+                                }
+                            }
+                        }
+                        hasResult = cs.getMoreResults();
+                    }
+
+                    return mensaje.toString().trim().isEmpty() ? "No se devolvió ningún mensaje."
+                            : mensaje.toString().trim();
+                }
             });
-            return "Compra realizada con éxito.";
         } catch (Exception ex) {
             return "Error al realizar la compra: " + ex.getMessage();
         }

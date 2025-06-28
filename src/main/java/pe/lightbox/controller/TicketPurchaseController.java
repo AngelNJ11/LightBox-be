@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class TicketPurchaseController {
     @Autowired
     private TicketPurchaseService ticketService;
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/compra")
     public String realizarCompra(@RequestParam int idCliente,
             @RequestParam int idFuncion,
@@ -33,14 +35,6 @@ public class TicketPurchaseController {
             HttpSession session,
             Model model) {
 
-        /*
-         * Persona usuario = (Persona) session.getAttribute("usuario");
-         * if (usuario == null) {
-         * return "redirect:/login";
-         * }
-         * 
-         * int idCliente = usuario.getIdPersona();
-         */
         return ticketService.registrarCompra(idCliente, idFuncion, piso, idCine, asientosSeleccionados);
     }
 

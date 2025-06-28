@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import pe.lightbox.security.JwtUtil;
 import pe.lightbox.service.AuthService;
 
 @Service
@@ -49,7 +50,6 @@ public class AuthServiceImpl implements AuthService {
                         cs.execute();
                         return null;
                     });
-
             return "Registro exitoso";
         } catch (Exception e) {
             return "Error al registrar: " + e.getMessage();

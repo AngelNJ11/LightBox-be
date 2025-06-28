@@ -12,14 +12,37 @@ public class Persona {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_persona")
     private int idPersona;
-    private String PrimerNombre;
-    private String SegundoNombre;
-    private String PrimerApellido;
-    private String SegundoApellido;
-    private String Dni;
-    private String Celular;
-    private String Correo;
-    private LocalDate FechaNacimiento;
-    private String Usuario;
-    private String Clave;
+
+    @Column(name = "primer_nombre")
+    private String primerNombre;
+
+    @Column(name = "segundo_nombre")
+    private String segundoNombre;
+
+    @Column(name = "primer_apellido")
+    private String primerApellido;
+
+    @Column(name = "segundo_apellido")
+    private String segundoApellido;
+
+    @Column(name = "DNI")
+    private String dni;
+
+    @Column(name = "celular")
+    private String celular;
+
+    @Column(name = "correo")
+    private String correo;
+
+    @Column(name = "fec_nacimiento")
+    private LocalDate fechaNacimiento;
+
+    @Column(name = "fec_registro")
+    private LocalDate fecRegistro;
+
+    @Column(name = "usuario")
+    private String usuario;
+
+    @Column(name = "clave")
+    private String clave;
 }
