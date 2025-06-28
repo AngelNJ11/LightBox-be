@@ -1,7 +1,10 @@
 package pe.lightbox.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import pe.lightbox.dto.PeliculaDTO;
 import pe.lightbox.model.Pelicula;
 import pe.lightbox.repository.PeliculaRepository;
 import pe.lightbox.service.PeliculaService;
@@ -14,6 +17,9 @@ public class PeliculaServiceImpl implements PeliculaService {
 
     @Autowired
     private PeliculaRepository peliculaRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public Optional<Pelicula> obtenerPeliculaId(int id) {
@@ -38,12 +44,22 @@ public class PeliculaServiceImpl implements PeliculaService {
 
 
     @Override
-    public Optional<Pelicula> findByTitulo(String titulo) {
-        try {
-            return peliculaRepository.findByTitulo(titulo);
+    public List<PeliculaDTO> findByTitulo(String titulo) {
+            try {
+            return jdbcTemplate.query(
+                "{CALL usp_get_PeliculasPorTitulo(?)}",
+                new Object[]{titulo},
+                (rs, rowNum) -> {
+                    PeliculaDTO pelicula = new PeliculaDTO();
+                    pelicula.setIdPelicula(rs.getInt("id_pelicula"));
+                    pelicula.setTitulo(rs.getString("titulo"));
+                    pelicula.setRutaImagen(rs.getString("ruta_imagen"));
+                    return pelicula;
+                }
+            );
         } catch (Exception e) {
             System.out.println("Error al buscar película por título: " + e.getMessage());
-            return Optional.empty();
+            return Collections.emptyList();
         }
     }
 

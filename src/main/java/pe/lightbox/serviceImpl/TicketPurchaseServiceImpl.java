@@ -49,8 +49,10 @@ public class TicketPurchaseServiceImpl implements TicketPurchaseService {
 
                 Cine c = new Cine();
                 c.setIdCine(rs.getInt("id_cine"));
-                s.setCine(c);
+                c.setSede(rs.getString("sede"));
+                c.setDireccion(rs.getString("direccion"));
 
+                s.setCine(c);
                 f.setSala(s);
 
                 Pelicula p = new Pelicula();

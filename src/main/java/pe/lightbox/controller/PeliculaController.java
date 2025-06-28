@@ -5,9 +5,11 @@ import jakarta.websocket.server.PathParam;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import pe.lightbox.dto.PeliculaDTO;
 import pe.lightbox.model.Pelicula;
 import pe.lightbox.service.PeliculaService;
 
@@ -39,10 +41,13 @@ public class PeliculaController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> findByTitulo(@PathParam("titulo") String titulo) {
-        return peliculaService.findByTitulo(titulo)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> findByTitulo(@RequestParam("titulo") String titulo) {
+        List<PeliculaDTO> peliculas = peliculaService.findByTitulo(titulo);
+        if (peliculas.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se encontraron películas");
+        }
+        return ResponseEntity.ok(peliculas);
     }
 
     @GetMapping("/filtrar")
