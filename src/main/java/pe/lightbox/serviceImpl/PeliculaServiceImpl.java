@@ -64,16 +64,6 @@ public class PeliculaServiceImpl implements PeliculaService {
     }
 
     @Override
-    public List<Pelicula> findByCineAndFechaFinCartelera(int idCine, String fechaFinCartelera) {
-        try{
-            return peliculaRepository.findByCineAndFechaFinCartelera(idCine, fechaFinCartelera);
-        } catch (Exception e) {
-            System.out.println("Error al buscar películas por cine y fecha de fin de cartelera: " + e.getMessage());
-            return Collections.emptyList();
-        }
-    }
-
-    @Override
     public List<Pelicula> findPeliculasEnCartelera() {
         try {
             LocalDate fechaActual = LocalDate.now();

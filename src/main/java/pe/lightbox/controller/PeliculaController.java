@@ -2,16 +2,23 @@ package pe.lightbox.controller;
 
 import jakarta.websocket.server.PathParam;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import pe.lightbox.dto.PeliculaDTO;
+import pe.lightbox.dto.PeliculaPorCineDTO;
 import pe.lightbox.model.Pelicula;
+import pe.lightbox.repository.PeliculaPorCineaRepository;
+import pe.lightbox.model.CinePelicula;
 import pe.lightbox.service.PeliculaService;
+import pe.lightbox.service.SedeService;
 
 @RestController
 @RequestMapping("/api/pelicula")
@@ -19,6 +26,12 @@ public class PeliculaController {
 
     @Autowired
     private PeliculaService peliculaService;
+
+    @Autowired
+    private SedeService sedeService;
+
+    @Autowired
+    private PeliculaPorCineaRepository peliculaPorCineaRepository;
 
     @GetMapping
     public ResponseEntity<?> obtenerTodasPeliculas() {
@@ -50,18 +63,6 @@ public class PeliculaController {
         return ResponseEntity.ok(peliculas);
     }
 
-    @GetMapping("/filtrar")
-    public ResponseEntity<?> findByCineAndFechaFinCartelera(
-            @RequestParam("idCine") int idCine,
-            @RequestParam("fechaFin") String fechaFinCartelera) {
-        if (fechaFinCartelera == null || fechaFinCartelera.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        return peliculaService.findByCineAndFechaFinCartelera(idCine, fechaFinCartelera).isEmpty()
-                ? ResponseEntity.notFound().build()
-                : ResponseEntity.ok(peliculaService.findByCineAndFechaFinCartelera(idCine, fechaFinCartelera));
-    }
-
     @GetMapping("/cartelera")
     public ResponseEntity<?> findByfechaInicioCarteleraAndFechaFinCartelera() {
         List<Pelicula> cartelera = peliculaService.findPeliculasEnCartelera();
@@ -80,5 +81,33 @@ public class PeliculaController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(estrenos);
+    }
+
+    @GetMapping("/filtrar")
+    public ResponseEntity<?> buscarPeliculasPorSedeYFecha(
+            @RequestParam(required = false) Integer idSede,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+
+        List<CinePelicula> relaciones = peliculaPorCineaRepository.findAll();
+        List<PeliculaPorCineDTO> resultado = relaciones.stream()
+                .filter(rel -> {
+                    Pelicula p = rel.getPelicula();
+                    boolean sedeOk = (idSede == null) || rel.getCine().getIdCine() == idSede;
+                    boolean fechaOk = (fecha == null) ||
+                            (!p.getFechaInicioCartelera().isAfter(fecha) &&
+                                    !p.getFechaFinCartelera().isBefore(fecha));
+                    return sedeOk && fechaOk;
+                })
+                .map(rel -> new PeliculaPorCineDTO(
+                        rel.getPelicula().getIdPelicula(),
+                        rel.getPelicula().getTitulo(),
+                        rel.getPelicula().getFechaInicioCartelera(),
+                        rel.getPelicula().getFechaFinCartelera(),
+                        rel.getCine().getSede()))
+                .collect(Collectors.toList());
+
+        return resultado.isEmpty()
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(resultado);
     }
 }

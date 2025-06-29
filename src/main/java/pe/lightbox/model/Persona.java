@@ -25,7 +25,7 @@ public class Persona {
     @Column(name = "segundo_apellido")
     private String segundoApellido;
 
-    @Column(name = "DNI")
+    @Column(name = "dni")
     private String dni;
 
     @Column(name = "celular")
@@ -39,9 +39,6 @@ public class Persona {
 
     @Column(name = "fec_registro")
     private LocalDate fecRegistro;
-
-    @Column(name = "usuario")
-    private String usuario;
 
     @Column(name = "clave")
     private String clave;

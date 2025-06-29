@@ -7,8 +7,7 @@ import pe.lightbox.model.Persona;
 public interface AuthService {
 
     public String registrarUsuario(String primerNombre, String segundoNombre, String primerApellido, String segundoApellido,
-                           String dni, String celular, String correo, LocalDate fechaNacimiento,
-                           String usuario, String clave);
+                           String dni, String celular, String correo, LocalDate fechaNacimiento, String clave);
     public Persona validarCredenciales(String usuario, String clave);
 
 }

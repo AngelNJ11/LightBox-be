@@ -1,13 +1,21 @@
 package pe.lightbox.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@Data
 @Embeddable
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CinePeliculaId implements Serializable {
-    private int idCine;
-    private int idPelicula;
+    @Column(name = "id_cine")
+    private Integer idCine;
+
+    @Column(name = "id_pelicula")
+    private Integer idPelicula;
 }

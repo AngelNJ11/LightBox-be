@@ -21,18 +21,6 @@ public interface PeliculaRepository extends JpaRepository<Pelicula, Integer> {
 
     Optional<Pelicula> findByTitulo(String titulo);
 
-    @Query(
-            value = "SELECT p.* FROM tb_pelicula p " +
-                    "JOIN tb_sala s ON p.id_sala = s.id_sala " +
-                    "JOIN tb_cine c ON s.id_cine = c.id_cine " +
-                    "WHERE c.id_cine = :idCine AND p.fec_fin_cartelera = :fechaFin",
-            nativeQuery = true
-    )
-    List<Pelicula> findByCineAndFechaFinCartelera(
-            @Param("idCine") int idCine,
-            @Param("fechaFin") String fechaFinCartelera
-    );
-
     List<Pelicula> findByFechaInicioCarteleraLessThanEqualAndFechaFinCarteleraGreaterThanEqual(LocalDate inicio, LocalDate fin);
 
     List<Pelicula> findByFechaInicioCarteleraAfter(LocalDate hoy);

@@ -18,7 +18,7 @@ import pe.lightbox.security.JwtUtil;
 import pe.lightbox.service.AuthService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
@@ -38,7 +38,6 @@ public class AuthController {
                 persona.getCelular(),
                 persona.getCorreo(),
                 persona.getFechaNacimiento(),
-                persona.getUsuario(),
                 persona.getClave());
         
         UserDetails user = new User(

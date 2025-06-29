@@ -25,8 +25,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String registrarUsuario(String primerNombre, String segundoNombre, String primerApellido,
             String segundoApellido,
-            String dni, String celular, String correo, LocalDate fechaNacimiento,
-            String usuario, String clave) {
+            String dni, String celular, String correo, LocalDate fechaNacimiento, String clave) {
         try {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             String claveEncriptada = encoder.encode(clave);
@@ -34,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
             jdbcTemplate.execute(
                     (Connection con) -> {
                         CallableStatement cs = con
-                                .prepareCall("{CALL usp_register_user(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+                                .prepareCall("{CALL usp_register_user(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
                         cs.setString(1, primerNombre);
                         cs.setObject(2, segundoNombre != null && !segundoNombre.isEmpty() ? segundoNombre : null,
                                 Types.VARCHAR);
@@ -45,7 +44,6 @@ public class AuthServiceImpl implements AuthService {
                         cs.setString(6, celular);
                         cs.setString(7, correo);
                         cs.setDate(8, java.sql.Date.valueOf(fechaNacimiento));
-                        cs.setString(9, usuario);
                         cs.setString(10, claveEncriptada);
                         return cs;
                     },
@@ -86,7 +84,6 @@ public class AuthServiceImpl implements AuthService {
                                     persona.setCorreo(rs.getString("correo"));
                                     persona.setFechaNacimiento(rs.getDate("fec_nacimiento").toLocalDate());
                                     persona.setFecRegistro(rs.getDate("fec_registro").toLocalDate());
-                                    persona.setUsuario(rs.getString("usuario"));
                                     persona.setClave(claveEncriptada);
                                     return persona;
                                 }
