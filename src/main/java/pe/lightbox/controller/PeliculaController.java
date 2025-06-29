@@ -83,7 +83,7 @@ public class PeliculaController {
         return ResponseEntity.ok(estrenos);
     }
 
-    @GetMapping("/filtrar")
+    @PostMapping("/filtrar")
     public ResponseEntity<?> buscarPeliculasPorSedeYFecha(
             @RequestParam(required = false) Integer idSede,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
