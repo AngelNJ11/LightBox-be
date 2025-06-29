@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import pe.lightbox.dto.FiltroPeliculaDTO;
 import pe.lightbox.dto.PeliculaDTO;
 import pe.lightbox.dto.PeliculaPorCineDTO;
 import pe.lightbox.model.Pelicula;
@@ -84,9 +85,9 @@ public class PeliculaController {
     }
 
     @PostMapping("/filtrar")
-    public ResponseEntity<?> buscarPeliculasPorSedeYFecha(
-            @RequestParam(required = false) Integer idSede,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+    public ResponseEntity<?> buscarPeliculasPorSedeYFecha(@RequestBody FiltroPeliculaDTO filtro) {
+        Integer idSede = filtro.getIdSede();
+        LocalDate fecha = filtro.getFecha();
 
         List<CinePelicula> relaciones = peliculaPorCineaRepository.findAll();
         List<PeliculaPorCineDTO> resultado = relaciones.stream()
@@ -110,4 +111,5 @@ public class PeliculaController {
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(resultado);
     }
+
 }
