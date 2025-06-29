@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
                         cs.setString(6, celular);
                         cs.setString(7, correo);
                         cs.setDate(8, java.sql.Date.valueOf(fechaNacimiento));
-                        cs.setString(10, claveEncriptada);
+                        cs.setString(9, claveEncriptada);
                         return cs;
                     },
                     (CallableStatementCallback<Void>) cs -> {

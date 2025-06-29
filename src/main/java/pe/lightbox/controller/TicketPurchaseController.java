@@ -1,19 +1,17 @@
 package pe.lightbox.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpSession;
+import pe.lightbox.dto.CompraDTO;
 import pe.lightbox.model.AsientoPurchase;
 import pe.lightbox.model.Funcion;
 import pe.lightbox.service.TicketPurchaseService;
@@ -27,15 +25,16 @@ public class TicketPurchaseController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/compra")
-    public String realizarCompra(@RequestParam int idCliente,
-            @RequestParam int idFuncion,
-            @RequestParam int piso,
-            @RequestParam int idCine,
-            @RequestParam int[] asientosSeleccionados,
-            HttpSession session,
-            Model model) {
+    public ResponseEntity<?> realizarCompra(@RequestBody CompraDTO request) {
+        String resultado = ticketService.registrarCompra(
+                request.getIdCliente(),
+                request.getIdFuncion(),
+                request.getPiso(),
+                request.getIdCine(),
+                request.getAsientosSeleccionados().stream().mapToInt(i -> i).toArray()
+        );
 
-        return ticketService.registrarCompra(idCliente, idFuncion, piso, idCine, asientosSeleccionados);
+        return ResponseEntity.ok().body(Map.of("mensaje", resultado));
     }
 
     @GetMapping("/funcion")
