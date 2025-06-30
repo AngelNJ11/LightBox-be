@@ -26,15 +26,25 @@ public class TicketPurchaseController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/compra")
     public ResponseEntity<?> realizarCompra(@RequestBody CompraDTO request) {
-        String resultado = ticketService.registrarCompra(
-                request.getIdCliente(),
-                request.getIdFuncion(),
-                request.getPiso(),
-                request.getIdCine(),
-                request.getAsientosSeleccionados().stream().mapToInt(i -> i).toArray()
-        );
-
-        return ResponseEntity.ok().body(Map.of("mensaje", resultado));
+        try {
+            String resultado = ticketService.registrarCompra(
+                    request.getIdCliente(),
+                    request.getIdFuncion(),
+                    request.getPiso(),
+                    request.getIdCine(),
+                    request.getAsientosSeleccionados().stream().mapToInt(i -> i).toArray()
+            );
+            if (resultado != null && resultado.toLowerCase().contains("error")) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                        "error", resultado
+                ));
+            }
+            return ResponseEntity.ok().body(Map.of(
+                    "mensaje", "Compra realizada con éxito"
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/funcion")
